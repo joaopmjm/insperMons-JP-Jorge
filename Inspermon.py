@@ -1,6 +1,6 @@
 import time
 import random
-
+import sys
 dex = {"0":["Atk","Def","Hp"],"1":["Atk","Def","Hp"],"2":["Atk","Def","Hp"],"3":["Atk","Def","Hp"],"4":["Atk","Def","Hp"],"5":["Atk","Def","Hp"],"6":["Atk","Def","Hp"],"7":["Atk","Def","Hp"],"8":["Atk","Def","Hp"],"9":["Atk","Def","Hp"],"10":["Atk","Def","Hp"]}
 mons = ["0","1","2","3","4","5","6","7","8","9"]
 Starters = ["0","1","2","3"]
@@ -20,8 +20,15 @@ Escolha_stats = dex[Starter]
 def rand():
 	randomnum = random.randint(0,9)
 	return randomnum
-
-
+def batalha(Starter,Oponente):
+	while Starter[Hp]>0 or Oponente[Hp]>0:
+		Oponente[Hp]=Starter[Atk]-Oponente[Def]
+		Starter[Hp]=Oponente[Atk]-Starter[Def]
+		time.sleep(3)
+	if Oponente[Hp]<=0:
+		print("Você venceu a batalha!")
+	if Starter[Hp]<=0:
+		print("Você perdeu a batalha!")
 while True:
 
 	i = input("Você quer ir batalhar ou dormir?  b/d\n")
@@ -43,7 +50,7 @@ while True:
 				print("calma fião")
 				continue
 			if n == "a":
-				1==1
+				batalha(Starter,Oponente)
 
 
 	else:
