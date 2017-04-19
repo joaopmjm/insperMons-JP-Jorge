@@ -16,20 +16,25 @@ while Starter != "Squirtle" and Starter !="Jomander" and Starter !="Bulbassauro"
 Escolha_stats = dex[Starter]
 
 def rand():
-	randomnum = random.randint(0,9)
+	randomnum = random.randint(0,10)
 	return randomnum
-def batalha(Starter,Oponente):
-	while Starter[Hp]>0 or Oponente[Hp]>0:
-		Oponente[Hp]=Starter[Atk]-Oponente[Def]
-		Starter[Hp]=Oponente[Atk]-Starter[Def]
-		time.sleep(3)
-	if Oponente[Hp]<=0:
-		return "Você venceu a batalha!"
-	if Starter[Hp]<=0:
-		return "Você perdeu a batalha!"
+def batalha(Escolha_stats,Oponente,dex):
+	Hp=2
+	Atk=0
+	Def=1
+	while True:
+		dex[Oponente][Hp]=dex[Oponente][Hp]-(Escolha_stats[Atk]-dex[Oponente][Def])
+		if dex[Oponente][Hp]<=0:
+			return "Você venceu a batalha!"
+		if dex[Oponente][Hp]>0:
+			Escolha_stats[Hp]=Escolha_stats[Hp]-(dex[Oponente][Atk]-Escolha_stats[Def])
+			if Escolha_stats[Hp]<=0:
+				return "Você perdeu!"
+			if Escolha_stats[Hp]>0:
+				continue
 while True:
 
-	i = input("Você quer ir batalhar ou dormir? \n b/d\n")
+	i = input("Você quer ir batalhar ou dormir? \n \n b/d\ \n \n")
 
 	if i == "d":
 		print("Nos vemos na próxima!")
@@ -43,11 +48,11 @@ while True:
 		print("A wild {} aparece!".format(Oponente))
 
 		while Escolha_stats[2] > 0 and dex[Oponente][2] > 0: #Trocar os "1", "2"... pelos nomes s/ ""
-			n = input("Atacar ou fugir? a/f")
+			n = input("Atacar ou fugir? \n a/f \n \n")
 			if n == "f":
 				print("calma fião")
 				continue
 			if n == "a":
-				batalha(Starter,Oponente)														
+				batalha(Starter,Oponente,dex)										
 	else:
 		print("Essa não é uma escolha disponível... tente novamente")
