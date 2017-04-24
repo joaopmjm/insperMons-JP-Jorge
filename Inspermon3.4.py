@@ -76,8 +76,8 @@ def batalha(game_poke, oponente):
     defe = 1
     hp = 2
     dex2 = dex
-    seu = starters[game_poke]
-    adv = dex2[oponente]
+    seu = copy.deepcopy(starters[game_poke])
+    adv = copy.deepcopy(dex2[oponente])
     cont = 1
 
     while True:
@@ -141,8 +141,8 @@ def fuga_mal_sucedida(game_poke, oponente):
     defe = 1
     hp = 2
     dex2 = dex
-    seu = starters[game_poke]
-    adv = dex2[oponente]
+    seu = copy.deepcopy(starters[game_poke])
+    adv = copy.deepcopy(dex2[oponente])
     cont = 1
 
     while True:
