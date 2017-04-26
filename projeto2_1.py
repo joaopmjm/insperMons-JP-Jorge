@@ -3,6 +3,7 @@ from scipy.integrate import odeint
 import numpy as np
 import matplotlib.pyplot as plt
 
+tempo=np.arange(0,36000,0.001)
 dose_total = 20
 doseCP = 10
 doseLP = 10
@@ -13,18 +14,25 @@ elimSCP = 0.4
 elimSLP = 0.5
 elimNCP = 0.3
 elimNLP = 0.8
-
+tad=0.45  #taxa de absorção da parde intestinal
+tas=0.25  #taxa de absorção no sangue para o sistema nervoso
 listaT = np.arange(0,10,1e-5)
+
+def f(doseCP,doseLP,tad):   #relação digestio sanguíneo
+	return doseCP*tad+doseLP*tad
+
+def g(doseCP,DoseLP,tas):   #relação sangue nervoso
+	return doseCP*tas+doseLP*tas
 
 def estoques(Z, t):
     doseCP = Z[0]
     doseLP = Z[1]
     
-    dDdt = - elimDCP*doseCP - elimDLP*doseLP - f(D, S)
+    dDdt = - elimDCP*doseCP - elimDLP*doseLP - doseCP*tas+doseLP*tas
 
-    dSdt = f(D, S) - elimSCP*doseCP - elimSLP*doseLP - g(S, N)
+    dSdt = doseCP*tas+doseLP*tas - elimSCP*doseCP - elimSLP*doseLP - doseCP*tad+doseLP*tad
 
-    dNdt = g(S, N) - elimNCP*doseCP - elimNLP*doseLP
+    dNdt = doseCP*tad+doseLP*tad - elimNCP*doseCP - elimNLP*doseLP
     
     return ([dDdt, dSdt, dNdt])
 
