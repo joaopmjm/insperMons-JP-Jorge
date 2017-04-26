@@ -2,22 +2,22 @@
 from scipy.integrate import odeint
 import numpy as np
 import matplotlib.pyplot as plt
-dt=0.1
-tempo1=np.arange(0,7200,dt)
-tempo2=np.arange(7200+dt,36000,dt)
-doseCP = 10
-doseLP = 10
+dt=0.1                              #Intervalo de tempo
+tempo1=np.arange(0,7200,dt)         #tempo com apenas a droga de ação imediata fazendo efeito
+tempo2=np.arange(7200+dt,36000,dt)  #tempo dps q a droga lenta começar a fazer efeito
+doseCP = 10   #dose da droga de ação imediata
+doseLP = 10   #dose da droga de ação lenta
 dose_totbl = doseCP+doseLP
-D=dose_totbl
-S=0
-N=0
+D=dose_totbl  #Concentração inicial no sis digestivo
+S=0   #Concentração inicial no sis sanguíneo
+N=0   #Concentração inicial no sis nervoso
 Z0 = [D,S,N] #condição inicibl
-elimDCP = 0.005
-elimDLP = 0.001
-elimSCP = 0.004
-elimSLP = 0.005
-elimNCP = 0.003
-elimNLP = 0.008
+elimDCP = 0.005   #taxa de eliminação da droga imediata no Sis Digestivo
+elimDLP = 0.001   #taxa de eliminação da droga lenta no Sis Digestivo
+elimSCP = 0.004   #taxa de eliminação da droga imediata no Sis Sanguíneo
+elimSLP = 0.005   #taxa de eliminação da droga lenta no Sis Sanguíneo
+elimNCP = 0.003   #taxa de eliminação da droga imediata no Sis Nervoso
+elimNLP = 0.008   #taxa de eliminação da droga lenta no Sis Nervoso
 tad=0.7  #taxa de absorção da parede intestinbl
 tas=0.9  #taxa de absorção no sangue para o sistema nervoso
 tun=0.99   #taxa de uso nervoso, quanto o sis. nervoso vai utilisar a cada intervblo de tempo
@@ -49,7 +49,7 @@ bl=odeint(estoquesL,Z,tempo2)
 
 def estoques2C(Z,t):
 	dDdt = - elimDCP * doseCP - doseCP * tas
-	dSdt = doseCP * tas - elimSCP*doseCP - doseCP * tad
+	dSdt = doseCP * tas - elimSCP * doseCP - doseCP * tad
 	dNdt = doseCP * tad - elimNCP * doseCP
 	return (dDdt, dSdt, dNdt)
 
