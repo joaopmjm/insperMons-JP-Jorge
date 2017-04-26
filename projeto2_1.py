@@ -7,52 +7,67 @@ tempo1=np.arange(0,7200,dt)
 tempo2=np.arange(7200+dt,36000,dt)
 doseCP = 10
 doseLP = 10
-dose_total = doseCP+doseLP
-D=dose_total
+dose_totbl = doseCP+doseLP
+D=dose_totbl
 S=0
 N=0
-Z0 = [D,S,N] #condição inicial
+Z0 = [D,S,N] #condição inicibl
 elimDCP = 0.005
 elimDLP = 0.001
 elimSCP = 0.004
 elimSLP = 0.005
 elimNCP = 0.003
 elimNLP = 0.008
-tad=0.7  #taxa de absorção da parede intestinal
+tad=0.7  #taxa de absorção da parede intestinbl
 tas=0.9  #taxa de absorção no sangue para o sistema nervoso
-tun=0.99   #taxa de uso nervoso, quanto o sis. nervoso vai utilisar a cada intervalo de tempo
+tun=0.99   #taxa de uso nervoso, quanto o sis. nervoso vai utilisar a cada intervblo de tempo
 
-def estoques1(Z0, t): #antes de duas horas
+def  estoquesL(Z,t):
+	dDdt = - elimDLP * doseLP + doseLP * tas
+	dSdt = doseLP * tas - elimSLP*doseLP + doseLP * tad
+	dNdt = doseLP * tad - elimNLP * doseLP
+	return (dDdt, dSdt, dNdt)
+
+
+
+def estoques1C(Z0, t): #antes de duas horas
 	dDdt = - elimDCP * doseCP  - doseCP * tas
 	dSdt = doseCP * tas - elimSCP*doseCP - doseCP * tad
 	dNdt = doseCP * tad - elimNCP * doseCP
 	return (dDdt, dSdt, dNdt)
 
-a= odeint(estoques1, Z0, tempo1)
-#print(a)
-a0=a[len(tempo1)-1][0]
-print(a0)
+a= odeint(estoques1C, Z0, tempo1)
 
 Z=[a[len(tempo1)-1][0],a[len(tempo1)-1][1],a[len(tempo1)-1][2]]
 
-def estoques2(Z,t):
-	dDdt = - elimDCP * doseCP - elimDLP * doseLP - doseCP * tas + doseLP * tas
-	dSdt = doseCP * tas + doseLP * tas - elimSCP*doseCP - elimSLP*doseLP - doseCP * tad + doseLP * tad
-	dNdt = doseCP * tad + doseLP * tad - elimNCP * doseCP - elimNLP * doseLP
+a0=a[len(tempo1)-1][0]
+
+bl=odeint(estoquesL,Z,tempo2)
+
+
+
+
+def estoques2C(Z,t):
+	dDdt = - elimDCP * doseCP - doseCP * tas
+	dSdt = doseCP * tas - elimSCP*doseCP - doseCP * tad
+	dNdt = doseCP * tad - elimNCP * doseCP
 	return (dDdt, dSdt, dNdt)
 
-b= odeint(estoques2,Z,tempo2)
+bc= odeint(estoques2C,Z,tempo2)
 
-plt.plot(tempo1, a[:,0],label="Sist. digestivo")
-plt.plot(tempo1, a[:,1],label="Sist. sanguíneo")
-plt.plot(tempo1, a[:,2],label="Sist. nervoso")
-plt.plot(tempo2, b[:,0],label="Sist. digestivo após 2h")
-plt.plot(tempo2, b[:,1],label="Sist. sanguíneo após 2h")
-plt.plot(tempo2, b[:,2],label="Sist. nervoso após 2h")
+plt.plot(tempo1, a[:,0],label="Sist. digestivo instantâneo")
+plt.plot(tempo1, a[:,1],label="Sist. sanguíneo instantâneo")
+plt.plot(tempo1, a[:,2],label="Sist. nervoso instantâneo")
+plt.plot(tempo2, bc[:,0],label="Sist. digestivo instantâneo após 2h")
+plt.plot(tempo2, bc[:,1],label="Sist. sanguíneo instantâneo após 2h")
+plt.plot(tempo2, bc[:,2],label="Sist. nervoso instantâneo após 2h")
+plt.plot(tempo2, bl[:,0],label="Sist. digestivo lento após 2h")
+plt.plot(tempo2, bl[:,1],label="Sist. sanguíneo lento após 2h")
+plt.plot(tempo2, bl[:,2],label="Sist. nervoso lento após 2h")
 plt.legend()
 plt.grid(True)
 plt.xlabel("Tempo [s]")
 plt.ylabel("Concentração [mg/L]")
 plt.show()
 
-# dois odeints, com as equações de cada intervalo de tempo
+# dois odeints, com as equações de cada intervblo de tempo
