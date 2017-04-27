@@ -7,8 +7,8 @@ tempo1=np.arange(0,7200,dt)         #tempo com apenas a droga de ação imediata
 tempo2=np.arange(7200+dt,36000,dt)  #tempo dps q a droga lenta começar a fazer efeito
 doseCP = 10   #dose da droga de ação imediata
 doseLP = 10   #dose da droga de ação lenta
-dose_totbl = doseCP+doseLP
-D=dose_totbl  #Concentração inicial no sis digestivo
+qS=20         #Quantidade de sangue
+D=doseCP+doseLP  #Concentração inicial no sis digestivo
 S=0   #Concentração inicial no sis sanguíneo
 N=0   #Concentração inicial no sis nervoso
 Z0 = [D,S,N] #condição inicibl
@@ -22,18 +22,18 @@ tad=0.7  #taxa de absorção da parede intestinbl
 tas=0.9  #taxa de absorção no sangue para o sistema nervoso
 tun=0.99   #taxa de uso nervoso, quanto o sis. nervoso vai utilisar a cada intervblo de tempo
 
-def  estoquesL(Z,t):
-	dDdt = - elimDLP * doseLP + doseLP * tas
-	dSdt = doseLP * tas - elimSLP*doseLP + doseLP * tad
-	dNdt = doseLP * tad - elimNLP * doseLP
+def  estoquesL(Z0,t):
+	dDdt = D - elimDLP * doseLP + doseLP * tas
+	dSdt = S + doseLP * tas - elimSLP*doseLP + doseLP * tad
+	dNdt = N + doseLP * tad - elimNLP * doseLP
 	return (dDdt, dSdt, dNdt)
 
 
 
 def estoques1C(Z0, t): #antes de duas horas
-	dDdt = - elimDCP * doseCP  - doseCP * tas
-	dSdt = doseCP * tas - elimSCP*doseCP - doseCP * tad
-	dNdt = doseCP * tad - elimNCP * doseCP
+	dDdt = D - elimDCP * doseCP  - doseCP * tas
+	dSdt = S + doseCP * tas - elimSCP * doseCP - doseCP * tad
+	dNdt = N + doseCP * tad - elimNCP * doseCP
 	return (dDdt, dSdt, dNdt)
 
 a= odeint(estoques1C, Z0, tempo1)
@@ -45,12 +45,12 @@ a0=a[len(tempo1)-1][0]
 bl=odeint(estoquesL,Z,tempo2)
 
 def estoques2C(Z,t):
-	dDdt = - elimDCP * doseCP - doseCP * tas
-	dSdt = doseCP * tas - elimSCP * doseCP - doseCP * tad
-	dNdt = doseCP * tad - elimNCP * doseCP
+	dDdt = D - elimDCP * doseCP - doseCP * tas
+	dSdt = S + doseCP * tas - elimSCP * doseCP - doseCP * tad
+	dNdt = N + doseCP * tad - elimNCP * doseCP
 	return (dDdt, dSdt, dNdt)
 
-bc= odeint(estoques2C,Z,tempo2)
+bc= odeint(estoques2C,Z0,tempo2)
 
 plt.plot(tempo1, a[:,0],label="SDI", color='r')
 plt.plot(tempo1, a[:,1],label="SSI", color='blue')
